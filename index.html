@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAS KOLABORASI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset + base */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Lato', Arial, sans-serif;
+      font-size: 14px;
+      color: #2f6f3b;
+      background-color: #f0f6f0;
+      background-image: url('https://44.media.tumblr.com/3a5e42cdffeb5c8db8c1c6aca341e895/b0fdf67c9e7b4bd6-fa/s75x75_c1_f1/e19b6493aca8f7011bfa0952fda3a7d973162036.gif');
+      background-repeat: repeat;
+      background-attachment: fixed;
+      background-position: center;
+      background-size: 120px 120px;
+      display: flex;
+      justify-content: center;
+      padding: 18px 0 140px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      width: 900px;
+      max-width: 95%;
+      background: #fff;
+      border-radius: 6px;
+      border: 1px dashed #97ED27;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+      overflow: visible;
+    }
+
+    .header {
+      width: 100%;
+      height: 220px;
+      background-image: url('https://64.media.tumblr.com/79db1d3365ef90c242e277a71eb6b0eb/d8ed731e26c00892-23/s500x750/554e9e911041e448d432a9584a14c1e430875037.gif');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+
+    .header .logo {
+      width: 75px;
+      height: 75px;
+      border-radius: 6px;
+      object-fit: cover;
+      margin-bottom: 10px;
+      background: rgba(255,255,255,0.4);
+      padding: 6px;
+    }
+
+    .sitename {
+      font-family: 'Pixelify Sans', Arial, sans-serif;
+      font-size: 24px;
+      letter-spacing: 3px;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    .layout { display: flex; flex-wrap: wrap; }
+    .leftside {
+      width: 180px;
+      padding: 12px;
+      background: #fff;
+      border-right: 1px solid #ddd;
+      flex-shrink: 0;
+    }
+    .rightside { flex: 1; padding: 12px; min-width: 240px; }
+
+    .boxtitle {
+      font-family: 'MS Gothic', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      border-bottom: 1px solid #ABEBA5;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      color: #3a8e4f;
+    }
+
+    .navi {
+      padding: 7px;
+      background: linear-gradient(145deg, #EFFDE9, #ADDAA1);
+      margin-bottom: 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: transform .18s, box-shadow .18s, background .18s, filter .18s;
+      color: #276a33;
+      user-select: none;
+    }
+
+    .navi:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 10px 16px rgba(0,0,0,0.18);
+      background: #68b864;
+      color: #fff;
+      filter: brightness(1.15);
+    }
+
+    /* pressed / active visual on the clicked button */
+    .navi.navi-pressed {
+      transform: translateY(0) scale(0.98);
+      background: #2f7c33 !important;
+      color: #fff;
+      filter: brightness(0.95);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+      transition: transform .08s, background .12s;
+    }
+
+    .sublinks { display: none; padding-left: 10px; margin-bottom: 8px; }
+    .sublinks.show { display: block; }
+    .sublinks a { display: block; padding: 3px 0; color: #499657; text-decoration: none; }
+    .sublinks a:hover { color: #1C5A2E; text-decoration: underline; }
+
+    /* Anggota block */
+    .mainbox {
+      background: #eee;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(200,230,200,0.4);
+    }
+    .maintitle {
+      font-family: 'MS Gothic', monospace;
+      font-size: 16px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #ABEBA5;
+      margin-bottom: 8px;
+      color: #2f6f3b;
+    }
+
+    /* horizontal anggota scroller */
+    .anggota-row-wrapper {
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      padding: 8px 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .anggota-row {
+      display: inline-flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .anggota-card {
+      display: inline-block;
+      width: 150px;
+      min-width: 150px;
+      background: #fff;
+      border-radius: 6px;
+      padding: 8px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      border: 1px solid rgba(160,210,160,0.25);
+      vertical-align: top;
+      transition: transform .2s, box-shadow .2s, filter .2s;
+    }
+    .anggota-card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+    .anggota-card h3 { margin-top: 8px; color: #2f6f3b; font-size: 13px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+      align-items: start;
+    }
+
+    .box {
+      background: #f9f9f9;
+      border-radius: 6px;
+      padding: 10px;
+      border: 1px solid rgba(160,210,160,0.4);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      min-height: 120px;
+      transition: transform .25s ease, box-shadow .25s ease, filter .25s ease, background .25s ease;
+    }
+
+    .box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+    }
+
+    .box .boxtitle {
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: #3a8e4f;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #dfeede;
+      padding-bottom: 6px;
+    }
+
+    .box .box-content {
+      overflow: auto;
+      max-height: 420px;
+      padding-right: 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gif-wrapper {
+      width: 100%;
+      min-height: 160px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      background: #eee;
+    }
+
+    .box img { width: 100%; border-radius: 6px; display: block; margin-top: 6px; }
+
+    .container.nav-clicked .box {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+      filter: brightness(1.02);
+    }
+
+    /* Footer */
+    .site-footer {
+      width: 100%;
+      text-align: center;
+      font-size: 13px;
+      padding: 12px 0;
+      background: rgba(240,255,240,0.95);
+      color: #1f542d;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      border-top: 1px solid rgba(140,200,140,0.5);
+      font-weight: 700;
+    }
+
+    /* Scrollbar polish */
+    .anggota-row-wrapper::-webkit-scrollbar, .box .box-content::-webkit-scrollbar { height: 10px; width: 10px; }
+    .anggota-row-wrapper::-webkit-scrollbar-thumb, .box .box-content::-webkit-scrollbar-thumb { background: rgba(58,142,79,0.18); border-radius: 6px; }
+    .anggota-row-wrapper::-webkit-scrollbar-track, .box .box-content::-webkit-scrollbar-track { background: transparent; }
+
+    @media (max-width: 700px) {
+      .leftside { width: 100%; border-right: 0; border-bottom: 1px solid #ddd; }
+      .header { height: 160px; }
+      .container { width: 98%; max-width: 98%; border-radius: 4px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="pageContainer">
+    <header class="header">
+      <img src="Logo Serviam.png" alt="Logo Serviam" class="logo">
+      <div class="sitename">Kelompok 6</div>
+    </header>
+
+    <div class="layout">
+      <aside class="leftside">
+        <div class="boxtitle">Navigation</div>
+
+        <div class="navi" data-key="one">One</div>
+        <div class="sublinks" id="menu1">
+          <a href="Kasus Pakaian Bekas Impor Ilegal.html">Kasus Pakaian Bekas Impor Ilegal</a>
+          <a href="Eksploitasi Pekerja dalam Pabrik Fast-Fashion.html">Eksploitasi Pekerja Fast-Fashion</a>
+        </div>
+
+        <div class="navi" data-key="two">Two</div>
+        <div class="sublinks" id="menu2">
+          <a href="Konsumerisme di Media Sosial.html">Konsumerisme di Media Sosial</a>
+          <a href="Proses Pembuatan Produk Nabati.html">Proses Pembuatan Produk Nabati</a>
+        </div>
+
+        <div class="boxtitle" style="margin-top:8px; font-size:13px;">
+          Menjadi Pemimpin yang Peduli, Kreatif, dan Global
+        </div>
+      </aside>
+
+      <main class="rightside">
+        <div class="mainbox">
+          <div class="maintitle">Anggota</div>
+
+          <div class="anggota-row-wrapper" aria-label="Anggota list">
+            <div class="anggota-row">
+              <div class="anggota-card">
+                <img src="Foto Alicia Kid.jpg" alt="Alicia X5/03 (Coordinator)">
+                <h3>Agama, PPKN, Informatika, Sejarah</h3>
+                <p></p>
+              </div>
+
+              <div class="anggota-card">
+                <img src="Foto Candice Kid.jpg" alt="Candice X5/06">
+                <h3>Candice X5/06</h3>
+                <p>Sejarah</p>
+              </div>
+
+              <div class="anggota-card">
+                <img src="Foto Oliver Kid.jpg" alt="Oliver X5/22">
+                <h3>Oliver X5/22</h3>
+                <p>Agama, Informatika, PPKN</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="box">
+            <div class="boxtitle">PPKN</div>
+            <div class="box-content">
+              <p style="color:#2e6e3a;"><strong>Sumber Pustaka:</strong></p>
+              <ul>
+                <li><a href="https://www.earthday.org/beneath-the-seams-the-human-toll-of-fast-fashion/" target="_blank" rel="noopener">Beneath the Seams: Human Toll of Fast Fashion — Earthday.org</a></li>
+                <li><a href="https://www.antislavery.org/latest/shein-fast-fashion-problem/" target="_blank" rel="noopener">The Problem with SHEIN & Fast Fashion — AntiSlavery.org</a></li>
+                <li><a href="https://www.humanrights.unsw.edu.au/research/commentary/explainer-what-fast-fashion-human-rights-environmental-impacts" target="_blank" rel="noopener">Fast Fashion: Human Rights & Environmental Impacts — UNSW</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="boxtitle">Apa Itu Konsumerisme?</div>
+            <div class="box-content">
+              <div class="gif-wrapper">
+                <div class="tenor-gif-embed"
+                  data-postid="24416947"
+                  data-share-method="host"
+                  data-aspect-ratio="1.80791"
+                  data-width="100%">
+                </div>
+              </div>
+
+              <p class="konsumerisme-text">
+                Menurut Kamus Besar Bahasa Indonesia dan Kamus Besar Bergambar Bahasa
+                Indonesia, “konsumerisme” diartikan sebagai gaya hidup yang suka
+                menghabiskan waktu dan terutama uang untuk berbelanja secara
+                berlebihan (berfoya-foya), gaya hidup boros, tidak mempedulikan
+                kesulitan orang lain — bukan hanya benda melainkan juga makanan dan
+                kesenangan.
+              </p>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="boxtitle">Sejarah</div>
+            <div class="box-content">
+              <li><a href="https://www.bing.com/ck/a?!&&p=f53202bf9630b261170dc8399f2a388e2f5b119dd3e734c781f1a957f6e537e9JmltdHM9MTc2MzU5NjgwMA&ptn=3&ver=2&hsh=4&fclid=2d1079b8-5e6b-6916-077a-6f1d5f9968ef&psq=kronologi+kejadian+tentang+penjualan+pakaian&u=a1aHR0cHM6Ly93d3cubGlwdXRhbjYuY29tL2Jpc25pcy9yZWFkLzYxMzI4MTgva3Jvbm9sb2dpLXBha2FpYW4tYmVrYXMtaW1wb3ItaWxlZ2FsLXJwLTE1MS1taWxpYXItZGljaWR1ay1iZWEtY3VrYWktdG5pLWFs
+" target="_blank" rel="noopener">Kronologi Pakaian Bekas Impor Ilegal Rp 1,51 Miliar Diciduk Bea Cukai-TNI AL</a></li>
+              <li><a href="https://regional.kompas.com/read/2022/01/10/205234978/sejarah-voc-di-indonesia-kedatangan-masa-kejayaan-hingga-keruntuhannya?page=all." 
+            target="_blank" rel="noopener">Sejarah VOC di Indonesia: Kedatangan, Masa Kejayaan, hingga Keruntuhannya</a></li>
+              <li><a href="https://www.brainacademy.id/blog/sumber-daya-alam" 
+            target="_blank" rel="noopener">Sumber Daya Alam: Pengertian, Jenis, Contoh & Cara Melestarikan</a></li>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="boxtitle">Agama</div>
+            <div class="box-content">
+              <li><a href="https://www.popmama.com/life/fashion-and-beauty/kenapa-perlu-tinggalkan-fast-fashion-ini-cara-dan-manfaatnya-00-wjnl5-bpzjhf
+" target="_blank" rel="noopener">Kenapa Perlu Tinggalkan Fast Fashion? Ini Cara dan Manfaatnya</a></li>
+              <li><a href="https://www.sustainablejungle.com/fast-fashion-alternatives/#:~:text=The%20best%20alternatives%20to%20fast%20fashion%20are%20brands,and%20promoting%20fair%20working%20conditions%20across%20their%20operations.
+" target="_blank" rel="noopener">9 Best Alternatives to Fast Fashion: Affordable & Sustainable Alt Options</a></li>
+              
+          </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    © Kelompok 6 — Menjadi Pemimpin yang Peduli, Kreatif, dan Berwawasan Global.
+  </footer>
+
+  <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+  <script>
+    document.querySelectorAll('.navi').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        const key = btn.getAttribute('data-key');
+        if (key === 'one') document.getElementById('menu1')?.classList.toggle('show');
+        if (key === 'two') document.getElementById('menu2')?.classList.toggle('show');
+
+        btn.classList.add('navi-pressed');
+
+        const container = document.getElementById('pageContainer');
+        container.classList.add('nav-clicked');
+
+        setTimeout(() => {
+          btn.classList.remove('navi-pressed');
+          container.classList.remove('nav-clicked');
+        }, 600);
+      });
+    });
+
+    window.addEventListener('load', function() {
+      const loader = document.getElementById('loading-screen');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(function() { if (loader) loader.style.display = 'none'; }, 450);
+      }
+    });
+  </script>
+</body>
+</html>
